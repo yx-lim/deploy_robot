@@ -1,13 +1,14 @@
 xml_path: "g1_29dof_scene.xml"
 # policy_path: "g1_29dof_vel.onnx"
 # policy_path: "g1_29dof_vel_robust.onnx"
-policy_path: "a_lunges.onnx"
-motion_path: "a_lunges.npz"
+policy_path: "a_facedown.onnx"
+motion_path: "a_facedown.npz"
+
+simulation_start_from_motion: true
 
 # interpolate to default position duration
 home_pos_duration: 3.0  # [sec]
 frame_pos_duration: 3.0  # [sec]
-
 
 # PD gains per joint
 Kp: [40.179, 99.098, 40.179, 99.098, 28.501, 28.501,
