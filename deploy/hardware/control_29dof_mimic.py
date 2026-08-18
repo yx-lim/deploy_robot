@@ -160,7 +160,12 @@ class ControlNode(Node):
         # load motion reference data
         motion_path = ROOT_DIR + "/motions/" + self.config['motion_path']
         motion = np.load(motion_path)
-        self.motion_fps = float(motion['fps'])
+        fps = np.asarray(motion["fps"])
+        if fps.size != 1:
+            raise ValueError(
+                f"Expected exactly one FPS value, got shape {fps.shape}: {fps}"
+            )
+        self.motion_fps = float(fps.reshape(-1)[0])
         if fps.size != 1:
             raise ValueError(
                 f"Expected exactly one FPS value, got shape {fps.shape}: {fps}"
