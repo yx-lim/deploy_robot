@@ -121,6 +121,13 @@ class SimulationNode(Node):
         self.default_base = np.array(self.config['home_base_pos'])
         self.home_joints = np.array(self.config['home_joint_pos'])
 
+        # simulation-only option:
+        # start directly from motion reference frame 0
+        self.start_from_motion = self.config.get(
+            "simulation_start_from_motion",
+            False,
+        )
+
 
     # initialize the mujoco simulation
     def init_simulation(self):
@@ -146,8 +153,82 @@ class SimulationNode(Node):
                                                      f"{self.nu}, got {len(self.home_joints)}.")
 
         # assign initial state
-        self.mj_data.qpos[:7] = self.default_base
-        self.mj_data.qpos[7:7+self.nu] = self.home_joints
+        if self.start_from_motion:
+
+            motion_path = (
+                ROOT_DIR
+                + "/motions/"
+                + self.config["motion_path"]
+            )
+
+            with np.load(motion_path) as motion:
+
+                # frame-0 floating-base state
+                base_pos = np.array(
+                    motion["body_pos_w"][0, 0, :],
+                    dtype=np.float64,
+                )
+
+                base_quat = np.array(
+                    motion["body_quat_w"][0, 0, :],
+                    dtype=np.float64,
+                )
+
+                # MuJoCo expects quaternion as wxyz.
+                # MjLab motion body_quat_w is already wxyz.
+                base_quat /= np.linalg.norm(base_quat)
+
+                base_lin_vel = np.array(
+                    motion["body_lin_vel_w"][0, 0, :],
+                    dtype=np.float64,
+                )
+
+                base_ang_vel = np.array(
+                    motion["body_ang_vel_w"][0, 0, :],
+                    dtype=np.float64,
+                )
+
+                # frame-0 joint state
+                joint_pos = np.array(
+                    motion["joint_pos"][0],
+                    dtype=np.float64,
+                )
+
+                joint_vel = np.array(
+                    motion["joint_vel"][0],
+                    dtype=np.float64,
+                )
+
+            if len(joint_pos) != self.nu:
+                raise ValueError(
+                    f"Motion has {len(joint_pos)} joints, "
+                    f"but model has {self.nu} actuators."
+                )
+
+            # qpos = [base xyz, base quat wxyz, joints]
+            self.mj_data.qpos[:3] = base_pos
+            self.mj_data.qpos[3:7] = base_quat
+            self.mj_data.qpos[7:7+self.nu] = joint_pos
+
+            # qvel = [base linear velocity, base angular velocity, joint velocity]
+            self.mj_data.qvel[:3] = base_lin_vel
+            self.mj_data.qvel[3:6] = base_ang_vel
+            self.mj_data.qvel[6:6+self.nu] = joint_vel
+
+            print("Simulation initialized from motion frame 0.")
+            print(f"    Motion: {motion_path}")
+            print(f"    Base position: {base_pos}")
+            print(f"    Base quaternion: {base_quat}")
+
+        else:
+
+            # normal deployment initialization
+            self.mj_data.qpos[:7] = self.default_base
+            self.mj_data.qpos[7:7+self.nu] = self.home_joints
+
+
+        # refresh all MuJoCo kinematics/sensors
+        mujoco.mj_forward(self.mj_model, self.mj_data)
 
         # build list of joint sensor names (matching actuator order)
         self.joint_pos_sensor_names = []
@@ -182,7 +263,8 @@ class SimulationNode(Node):
         self.viewer.cam.azimuth   = 135    # degrees, horizontal rotation
         self.viewer.cam.elevation = -20    # degrees, negative looks down
         self.viewer.cam.distance  = 2.5    # meters from lookat point
-        self.viewer.cam.lookat[:] = list(self.default_base[0:3]) # (x, y, z) point to look at
+        # self.viewer.cam.lookat[:] = list(self.default_base[0:3]) # (x, y, z) point to look at
+        self.viewer.cam.lookat[:] = self.mj_data.qpos[:3]
 
         self.viewer_render_hz = RENDER_HZ
         self._last_viewer_sync = 0.0

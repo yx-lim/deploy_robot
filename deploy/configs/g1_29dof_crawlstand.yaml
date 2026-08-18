@@ -4,8 +4,11 @@ xml_path: "g1_29dof_scene.xml"
 policy_path: "a_contactrich_crawlstand.onnx"
 motion_path: "a_crawlstand.npz"
 
+simulation_start_from_motion: true
+
 # interpolate to default position duration
 home_pos_duration: 3.0  # [sec]
+frame_pos_duration: 3.0  # [sec]
 
 # PD gains per joint
 Kp: [40.179, 99.098, 40.179, 99.098, 28.501, 28.501,
