@@ -161,6 +161,12 @@ class ControlNode(Node):
         motion_path = ROOT_DIR + "/motions/" + self.config['motion_path']
         motion = np.load(motion_path)
         self.motion_fps = float(motion['fps'])
+        if fps.size != 1:
+            raise ValueError(
+                f"Expected exactly one FPS value, got shape {fps.shape}: {fps}"
+            )
+
+        self.motion_fps = float(fps.reshape(-1)[0])
         self.motion_joint_pos = motion['joint_pos'].astype(np.float32)
         self.motion_joint_vel = motion['joint_vel'].astype(np.float32)
         self.motion_body_quat_w = motion['body_quat_w'].astype(np.float32)
