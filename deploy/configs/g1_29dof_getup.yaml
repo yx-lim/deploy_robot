@@ -43,8 +43,8 @@ xml_path: "g1_29dof_scene.xml"
 # motion_path: "v3_tracking_sideroll_hold.npz"
 # policy_path: "to_sideroll_mysetup.onnx"
 # motion_path: "to_sideroll_29dof.npz"
-policy_path: "a_facedown.onnx"
-motion_path: "a_facedown.npz"
+policy_path: "a_getup.onnx"
+motion_path: "a_getup.npz"
 
 # interpolate to default position duration and frame 0 in mimic
 home_pos_duration: 3.0  # [sec]
@@ -55,8 +55,8 @@ frame_pos_duration: 3.0  # [sec]
 #      45.179, 104.098, 45.179, 104.098, 33.501, 33.501,
 Kp: [40.179, 99.098, 40.179, 99.098, 28.501, 28.501, # nominal gains
      40.179, 99.098, 40.179, 99.098, 28.501, 28.501,
-     35.179, 23.501, 23.501,  # Warning: ACTIVE WAIST  # lower gains
-     # 40.179, 28.501, 28.501,  # Warning: ACTIVE WAIST, nominal gains
+     # 35.179, 23.501, 23.501,  # Warning: ACTIVE WAIST  # lower gains
+     40.179, 28.501, 28.501,  # Warning: ACTIVE WAIST, nominal gains
      # 40.179, 0.0,    0.0,  # Warning: LOCKED WAIST
      14.251, 14.251, 14.251, 14.251, 14.251, 16.778, 16.778,
      14.251, 14.251, 14.251, 14.251, 14.251, 16.778, 16.778]
@@ -69,11 +69,18 @@ Kd: [2.558, 6.309, 2.558, 6.309, 1.814, 1.814,
      0.907, 0.907, 0.907, 0.907, 0.907, 1.068, 1.068]
 
 # home positions (sim spawns here; hardware ramps to here during the 'home' FSM state)
-home_base_pos: [0, 0, 0.78, 1, 0, 0, 0]
-home_joint_pos: [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0,
-                 -0.312, 0.0, 0.0, 0.669, -0.363, 0.0,
-                  0.0, 0.0, 0.0,
-                  0.2,  0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
-                  0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0]
+# home_base_pos: [0, 0, 0.78, 1, 0, 0, 0]
+# home_joint_pos: [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0,
+#                  -0.312, 0.0, 0.0, 0.669, -0.363, 0.0,
+#                   0.0, 0.0, 0.0,
+#                   0.2,  0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
+#                   0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0]
+
+home_base_pos: [0.000, 0.000, 0.086, 0.707, 0.000, -0.707, 0.000]
+home_joint_pos: [-0.515, -0.011, -0.010, 1.290, 0.477, -0.015,
+                 -0.515, 0.011, 0.010, 1.290, 0.477, 0.015,
+                  0.000, 0.000, -0.000,
+                  0.180, 0.192, -0.016, 0.301, -0.016, -0.001, 0.012,
+                  0.180, -0.192, 0.016, 0.301, 0.016, -0.001, -0.012]
 
 control_dt: 0.02

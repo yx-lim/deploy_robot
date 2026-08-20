@@ -1,14 +1,13 @@
 xml_path: "g1_29dof_scene.xml"
 # policy_path: "g1_29dof_vel.onnx"
 # policy_path: "g1_29dof_vel_robust.onnx"
-policy_path: "a_pushup.onnx"
-motion_path: "a_pushup.npz"
-
-simulation_start_from_motion: true
+policy_path: "b_lunges3gg.onnx"
+motion_path: "b_lunges3gg.npz"
 
 # interpolate to default position duration
 home_pos_duration: 3.0  # [sec]
 frame_pos_duration: 3.0  # [sec]
+
 
 # PD gains per joint
 Kp: [40.179, 99.098, 40.179, 99.098, 28.501, 28.501,
@@ -33,12 +32,12 @@ Kd: [2.558, 6.309, 2.558, 6.309, 1.814, 1.814,
 #                   0.35,  0.18, 0.0, 0.87, 0.0, 0.0, 0.0,
 #                   0.35, -0.18, 0.0, 0.87, 0.0, 0.0, 0.0]
 
-home_base_pos: [0.000, 0.000, 0.160, 0.664, 0.000, 0.748, 0.000]
-home_joint_pos: [-0.294, 0.005, -0.001, 0.264, 0.043, -0.005,
-                 -0.265, 0.006, -0.003, 0.181, 0.078, -0.007,
-                  0.002, 0.004, -0.324,
-                  0.387, 0.169, -0.157, -0.590, 1.300, 0.151, 1.249,
-                  0.349, -0.107, 0.070, -0.591, -1.657, 0.100, -1.230]
+home_base_pos: [0.000, 0.000, 0.759, 1.000, 0.000, 0.000, 0.000]
+home_joint_pos: [-0.312, 0.000, 0.000, 0.669, -0.363, 0.000,
+                 -0.312, 0.000, 0.000, 0.669, -0.363, 0.000,
+                  0.000, 0.000, 0.000,
+                  0.200, 0.200, 0.000, 0.600, 0.000, 0.000, 0.000,
+                  0.200, -0.200, 0.000, 0.600, 0.000, 0.000, 0.000]
 
 control_dt: 0.02
 

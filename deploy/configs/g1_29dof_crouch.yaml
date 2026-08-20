@@ -1,8 +1,8 @@
 xml_path: "g1_29dof_scene.xml"
 # policy_path: "g1_29dof_vel.onnx"
 # policy_path: "g1_29dof_vel_robust.onnx"
-policy_path: "a_pushup.onnx"
-motion_path: "a_pushup.npz"
+policy_path: "b_crouch.onnx"
+motion_path: "b_crouch.npz"
 
 simulation_start_from_motion: true
 
